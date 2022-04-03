@@ -1,0 +1,132 @@
+<html>
+    <body>
+        <form onsubmit="saveToLoocalStorage(event)">
+            <label>Choose Expanse Amount</label>
+            <input id="ChooseExpanseAmount" type="text"name="ChooseExpanseAmount"required/>
+            <label>Choose Description</label>
+            <input id="ChooseDescription" type="text"name="ChooseDescription"required/>
+            <label for="movies">Select a Category</label>
+            <select name="movies" id="movies">
+                <option value="romantic">Romantic</option>
+                <option value="thriller">Thriller</option>
+                <option value="comedy">Comedy</option>
+                <option value="mystery">Mystery</option>
+                <option value="psychological">Psychological</option>
+            </select>
+            <button>Add Expense</button>
+            </form>
+            <ul id="ListofOptions"></ul>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js"></script> 
+            <script>
+                
+                function show(){
+                    var e=document.getElementById("movies");
+                    var option=e.options[e.SelectedIndex];
+                }
+                function saveToLocalStorage(event) {
+                event.preventDefault();
+                const ChooseExpanseAmount = event.target.ChooseExpanseAmount.value;
+                const ChooseDescription = event.target.ChooseDescription.value;
+                const movies= event.target.show();
+                // localStorage.setItem('name', name);
+                // localStorage.setItem('email', email);
+                // localStorage.setItem('phonenumber', phonenumber)
+                const obj = {
+                    ChooseExpanseAmount,
+                    ChooseDescription,
+                    movies
+                }
+                axios.post('https://crudcrud.com/api/573c34dd598e419c84a4e978c69a705a/appointmentData',obj)
+                .then((response)=>{
+                    showNewUserOnScreen(response.data)
+                    console.log(response)
+                })
+                .catch((err)=>{
+                    document.body.innerHTML=document.body.innerHTML+'<h4> Sopmething went wrong</h4>'
+                    console.log(err);
+                //localStorage.setItem(obj.email, JSON.stringify(obj))
+                //showNewUserOnScreen(obj)
+            }
+                )}
+
+            window.addEventListener("DOMContentLoaded", () => {
+                //axios returns promise and it does network calls
+                axios.get('https://crudcrud.com/api/573c34dd598e419c84a4e978c69a705a/appointmentData',this.obj)
+                .then((response)=>{
+                    console.log(response)
+                    for(var i=0;i<response.data.length;i++){
+                        showNewUserOnScreen(response.data[i]);
+                    }
+                })
+                .catch((err)=>{
+                    console.log(err)
+                })
+                // const localStorageObj = localStorage;
+                // const localstoragekeys  = Object.keys(localStorageObj)
+
+                // for(var i =0; i< localstoragekeys.length; i++){
+                //     const key = localstoragekeys[i]
+                //     const userDetailsString = JSON.stringify(localStorageObj[key]);
+                //     const userDetailsObj = JSON.parse(userDetailsString);
+                //     showNewUserOnScreen(userDetailsObj)
+                // }
+            })
+
+            function showNewUserOnScreen(user){
+                document.getElementById('ChooseDescription').value = '';
+                document.getElementById('ChooseExpanseAmount').value = '';
+                document.getElementById('movies').value ='';
+
+                if(localStorage.getItem(user.ChooseDescription) !== null){
+                    removeUserFromScreen(user.ChooseDescription)
+                }
+
+                const parentNode = document.getElementById('listOfOptions');
+                const childHTML = `<li id=${user.ChooseDescription}> ${user.ChooseExpanseAmount} - ${user.ChooseDescription}
+                                        <button onclick=deleteUser('${user.ChooseDescription}')> Delete User </button>
+                                        <button onclick=editUserDetails('${user.ChooseDescription}','${user.ChooseExpanseAmount}','${user.movies}')>Edit User </button>
+                                     </li>`
+
+                parentNode.innerHTML = parentNode.innerHTML + childHTML;
+            }
+
+            //Edit User
+
+            function editUserDetails(emailId, name, phonenumber){
+
+                document.getElementById('ChooseDescription').value = ChooseDescription;
+                document.getElementById('ChooseExpanseAmount').value = ChooseExpanseAmount;
+                document.getElementById('movies').show() =movies;
+
+                deleteUser(ChooseDescription);
+             }
+
+
+
+            function deleteUser(ChooseDescription){
+                console.log(ChooseDescription)
+                localStorage.removeItem(ChooseDescription);
+                removeUserFromScreen(ChooseDescription);
+
+            }
+
+            function removeUserFromScreen(ChooseDescription){
+                const parentNode = document.getElementById('listOfOptions');
+                const childNodeToBeDeleted = document.getElementById(ChooseDescription);
+                if(childNodeToBeDeleted) {
+                    parentNode.removeChild(childNodeToBeDeleted);
+                }
+            }
+        
+
+
+
+
+
+
+
+        </script>
+
+
+    </body>
+</html> 
