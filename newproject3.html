@@ -23,7 +23,7 @@
                 var e=document.getElementById("movies").value;
                 return e
             }
-            function saveToLocalStorage(event){
+            async function saveToLocalStorage(event){
                 event.preventDefault();
                 const ce=event.target.ChooseExpanseAmount.value;
                 const cd=event.target.ChooseDescription.value;
@@ -36,31 +36,35 @@
                     ChooseDescription:cd,
                     movies:m
                 }
-                axios.post('https://crudcrud.com/api/e0aa7492f905428491d7042862df4059/appointmentdata',obj)
-                    .then((response)=>{
-                        showOnScreen(response.data);
-                        console.log(response)
-                    })
-                    .catch((err)=>{
-                        document.body.innerHTML=document.body.innerHTML+'<h4> Something went wrong</h4>'
-                        console.log(err)
-                    })
+                const post1=axios.post('https://crudcrud.com/api/e0aa7492f905428491d7042862df4059/appointmentdata',obj)
+                        try{
+                            let response=await post1;
+                            showOnScreen(response.data);
+                            console.log(response)
+                        }catch(err){
+                            document.body.innerHTML=document.body.innerHTML+'<h4> Something went wrong</h4>'
+                            console.log(err)
+                        }
+                        
                 //localStorage.setItem(obj.ChooseDescription,JSON.stringify(obj));//always string is saved in local storage
                 //showOnScreen(obj);
 
             }
-            window.addEventListener("DOMContentLoaded",()=>{
-                axios.get('https://crudcrud.com/api/e0aa7492f905428491d7042862df4059/appointmentdata',this.obj)
-                .then((response)=>{
+            window.addEventListener("DOMContentLoaded",async()=>{
+                const get1=axios.get('https://crudcrud.com/api/e0aa7492f905428491d7042862df4059/appointmentdata',this.obj)
+                try{
+                    let response2=await get1;
                     //console.log(respone);
-                    for(var i=0;i<response.data.length;i++){
-                        showOnScreen(response.data[i]);
+                    for(var i=0;i<response2.data.length;i++){
+                        showOnScreen(response2.data[i]);
                     }
-                })
-                .catch((err)=>{
+                }catch(err){
                     document.body.innerHTML=document.body.innerHTML+'<h4> Something went wrong</h4>'
                     console.log(err);
-                })
+                }
+            })
+                
+               
                 // const localStorageObj=localStorage;//it will refer to local storafge
                 // const localstoragekeys=Object.keys(localStorageObj);//it will return keys
                 // for(let i=0;i<localstoragekeys.length;i++){
@@ -69,7 +73,7 @@
                 //     const userobj=JSON.parse(userString);
                 //     showOnScreen(userobj);
                 // }
-            })
+            
             function showOnScreen(user){
                 parentNode=document.getElementById("ListOfOptions");
                 childhtml=`<li id=${user._id}>${user.ChooseExpanseAmount}-${user.ChooseDescription}-${user.movies}
@@ -84,14 +88,14 @@
                 document.getElementById('movies').value=m;
                 deletedata(userid);
             }
-            function deletedata(ChooseExpanseAmount){
-                axios.delete(`https://crudcrud.com/api/e0aa7492f905428491d7042862df4059/appointmentdata/${ChooseExpanseAmount}`)
-                .then((response)=>{
+            async function deletedata(ChooseExpanseAmount){
+                const delete1=axios.delete(`https://crudcrud.com/api/e0aa7492f905428491d7042862df4059/appointmentdata/${ChooseExpanseAmount}`)
+                try{
+                    const response3=await delete1;
                     removefromScreen(ChooseExpanseAmount);
-                })
-                .catch((err)=>{
+                }catch(err){
                     console.log(err);
-                })
+                }
                 //localStorage.removeItem(ChooseExpanseAmount);
                 //removefromScreen(ChooseExpanseAmount);
             }
