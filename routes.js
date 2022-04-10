@@ -1,18 +1,12 @@
-const http=require('http')
 const fs=require('fs');
-const server=http.createServer((req,res)=>{
-    //console.log(req.url,req.method,req.headers);
-    //process.exit()
-    //Get request is used to retrieve information requested by url
-    const url=req.url;//parsing the url
+const requestHandler=(req,res)=>{//anonymous function
+    const url=req.url;
     const method=req.method;
-    
-    
     if(url==='/'){
         res.setHeader('Content-Type','text/html');
         res.write('<html>');
         res.write('<head><title>Enter Message</title><head>');
-
+    
         res.write('<body><form action="/message" method="POST"><input type="text" name="message"><button type="submit">Send</button></form></body>');
         //sending post request
         res.write('</html>');
@@ -40,10 +34,16 @@ const server=http.createServer((req,res)=>{
     res.setHeader('Content-Type','text/html');
     res.write('<html>');
     res.write('<head><title>My first page</title><head>');
-
+    
     res.write('<body><h1>Backend Engineer</h1></body>');
     res.write('</html>');
     res.end();
+};
+//module.exports=requestHandler;//it is a global variable used to export files to other programs
 
-});
-server.listen(4000);
+// module.exports={//another way of doing it
+//     handler:requestHandler,
+//     someText:'Some hard code text'
+// }
+exports.handler=requestHandler;//one more way
+exports.someText='Some hard code text';
