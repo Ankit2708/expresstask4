@@ -1,25 +1,10 @@
-const path = require('path');
-
-const express = require('express');
-
-const shopController = require('../controllers/shop');
-
-const router = express.Router();
-
-router.get('/', shopController.getIndex);
-
-router.get('/products', shopController.getProducts);
-
-router.get('/products/:productId', shopController.getProduct);
-
-router.get('/cart', shopController.getCart);
-
-router.post('/cart', shopController.postCart);
-
-router.post('/cart-delete-item', shopController.postCartDeleteProduct);
-
-router.get('/orders', shopController.getOrders);
-
-router.get('/checkout', shopController.getCheckout);
-
-module.exports = router;
+const path=require('path');//gives absolute path of project folder
+const express=require('express');
+const router=express.Router();
+router.get('/',(req,res,next)=>{
+    
+    //res.send('<h1>Hello from Express</h1>');
+    res.sendFile(path.join(__dirname,'../','viewsscreen','shop.html'))//it will join the pathof html and js
+    //path join detects os and chose correct path for it
+})
+module.exports=router;
